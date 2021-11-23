@@ -1,0 +1,34 @@
+Lesen Sie den Code der Methode readArticles() und erklären Sie mit je 1‐2 Sätzen die Funktionen
+des Streams:
+a) Quelle: StreamSupport.stream()
+    Lese die übergebene JSON Datei als Stream ein und teile in JsonNodes auf
+b) .limit( lim )
+    Limit, wie viele Objekte maximal eingelesen werden sollen. Bei Erreichen dieses Limits wird der Stream geschlossen.
+c) .map( jsonNode ‐> {
+Optional<Article> article = createArticle( jsonNode );
+if( article.isEmpty() ) {
+System.out.println( "dropping: " + jsonNode.toString() );
+}
+return article;
+})
+    Lambda Funktion um Artikel während des Lesens des Streams anzulegen. Wenn kein Artikel angelegt werden konnte gebe
+    dropping jsonNode.toString() als Fehlermeldung aus
+d) .filter( a ‐> a.isPresent() )
+    wenn kein Wert in a gefunden werden konnte, filtere a aus dem Stream raus
+e) .map( aOpt ‐> aOpt.get() )
+    verknüpfe gültige Objekte mit Artikel Objekten
+f) .collect( Collectors.toList() ); // Senke des Streams.
+    packe alle gültigen Objekte in eine Liste (Stream wird danach geschlossen)
+
+5.) Lesen Sie den Code der Factory ‐ Methode createArticle( jsonNode ). Treffen Sie drei
+Aussagen, was diese Funktion macht und welches Ergebnis sie liefert.
+    Create Article versucht aus einem aus dem Stream erstellten jsonNode ein gültiges Article-Objekt zu erzeugen.
+    Die Attribute id, unitPrice, currency, unitsInStock und description sind hierzu benötigt um ein gültiges Objekt zu erzeugen.
+    vat ist optional, kann aber auch ohne dieses Attribut gültig sein
+    Falls beim Erzeugen keine Fehler auftraten wird ein Optional.of( article ) erzeugt, falls nicht ist das Optional leer (kein Artikel erzeugt).
+
+6.) Was ist ein Optional<T> ? Was ist <T> ?
+https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html. [ 1 Pkt ]
+    Ein Optional<T> kann ein gesuchtes Objekt enthalten, wenn dieses gültig ist und existiert, das heißt nicht null ist.
+    Wenn es kein valides Objekt enthält ist es leer (Optional.empty()) und isValid gibt false zurück
+    <T> ist ein anzugebener Typ (beispielsweise Article, String, etc.) Optional ist ein Interface und kompatibel mit beliebigen Objekten
