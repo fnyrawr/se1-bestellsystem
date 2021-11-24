@@ -8,9 +8,14 @@
  * @version {@value package_info#Version}
  * @author fkate
  */
-
 package system;
 
 class package_info {
-    static final String Version = "0.1.0";
+    /**
+     * Version history
+     * "0.1.1 - feat. E2: printOrdersToFile" - update with new feature
+     * "0.1.0" - initial version until D12
+     */
+    // static final String Version = "0.1.0";
+    static final String Version = "0.1.1 - feat.E2: printOrdersToFile";
 }
