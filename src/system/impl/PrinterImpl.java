@@ -7,6 +7,10 @@ import system.Calculator;
 import system.Formatter;
 import system.Printer;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -131,6 +135,34 @@ class PrinterImpl implements Printer {
         return formatter.getBuffer();
     }
 
+    /**
+     * Print orders as table to a file.
+     *
+     * Conditions:
+     * - creates new file or overwrites an existing file.
+     * - not existing parts of the path are created, throws IOException
+     * if this is not possible.
+     *
+     * @param orders list of orders to print.
+     * @param filepath path and name of the output file.
+     * @throws IOException for errors.
+     */
+    @Override
+    public void printOrdersToFile( Iterable<Order> orders, String filepath ) throws IOException {
+        // create file if not exists yet
+        File file = new File( filepath );
+        if( !file.getParentFile().exists() )
+            file.getParentFile().mkdirs();
+        // write data to file
+        BufferedWriter writer = new BufferedWriter( new FileWriter( filepath ) );
+        writer.write( printOrders( orders ).toString() );
+        writer.close();
+    }
+
+    /**
+     * Create a Formatter object.
+     * @return Formatter object.
+     */
     @Override
     public Formatter createFormatter() {
         return new FormatterImpl();

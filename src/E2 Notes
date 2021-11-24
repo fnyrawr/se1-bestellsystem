@@ -1,0 +1,13 @@
+1)
+- Aktuelle Version committen als Sicherungspunkt des aktuellen Stands
+- Versionsnummer von 0.1.0 auf 0.1.1 anpassen
+- Anforderungsanalyse des neuen Features
+- Konzept zur Implementierung machen (Skizze zur Umsetzung z.B. oder Notizen wie der Ablauf gecodet werden könnte)
+- neues Feature implementieren
+- neues Feature testen
+- JavaDocs aktualisieren
+- neue Version committen
+
+2)
+- module-info.java: neue Versionsnummer anpassen
+- package-info.java; neue Versionsnummer anpassen
