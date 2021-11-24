@@ -10,7 +10,7 @@
  */
 package system;
 
-class package_info {
+public class package_info {
     /**
      * Version history
      * "0.1.1 - feat. E2: printOrdersToFile" - update with new feature
