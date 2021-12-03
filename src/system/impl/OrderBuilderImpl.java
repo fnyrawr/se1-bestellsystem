@@ -1,5 +1,6 @@
 package system.impl;
 
+import system.InventoryManager;
 import system.OrderBuilder;
 import system.RTE.Runtime;
 
@@ -7,7 +8,6 @@ import datamodel.Article;
 import datamodel.Customer;
 import datamodel.Order;
 import system.Repository;
-
 
 /**
  * Singleton component that builds orders and stores them in the
@@ -34,6 +34,8 @@ class OrderBuilderImpl implements OrderBuilder {
 	private final Repository<Article> articleRepository;
 	//
 	private final Repository<Order> orderRepository;
+	//
+	private final InventoryManager inventoryManager;
 
 
 	/**
@@ -42,7 +44,7 @@ class OrderBuilderImpl implements OrderBuilder {
 	 * @param runtime dependency to resolve Repository dependencies.
 	 * @return
 	 */
-	public static OrderBuilderImpl getInstance(Runtime runtime ) {
+	public static OrderBuilderImpl getInstance( Runtime runtime ) {
 		if( orderBuilder_instance == null ) {
 			orderBuilder_instance = new OrderBuilderImpl( runtime );
 		}
@@ -56,10 +58,11 @@ class OrderBuilderImpl implements OrderBuilder {
 	 * @param runtime dependency injected from where repository
 	 * dependencies are resolved.
 	 */
-	private OrderBuilderImpl(Runtime runtime ) {
+	private OrderBuilderImpl( Runtime runtime ) {
 		this.customerRepository = runtime.getCustomerRepository();
 		this.articleRepository = runtime.getArticleRepository();
 		this.orderRepository = runtime.getOrderRepository();
+		this.inventoryManager = runtime.getInventoryManager();
 	}
 
 
@@ -69,11 +72,13 @@ class OrderBuilderImpl implements OrderBuilder {
 	 * @param order saved to OrderRepository
 	 * @return chainable self-reference
 	 */
+	@Override
 	public boolean accept( Order order ) {
-		// TODO: validate order
-		boolean valid = true;
-		orderRepository.save( order );
-		return valid;
+		boolean validOrder = inventoryManager.isFillable( order );
+		if( validOrder ) {
+			orderRepository.save( order );
+		}
+		return validOrder;
 	}
 
 

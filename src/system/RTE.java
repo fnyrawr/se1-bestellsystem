@@ -166,6 +166,13 @@ public interface RTE {
 		 */
 		OrderBuilder getOrderBuilder();
 
+		/**
+		 * Return singleton instance of InventoryManager.
+		 *
+		 * @return singleton instance of InventoryManager.
+		 */
+		InventoryManager getInventoryManager();
+
 
 		/**
 		 * Load data into repositories during Runtime launch,
