@@ -2,7 +2,6 @@ package system;
 
 import datamodel.Currency;
 
-
 /**
  * Public interface of a Formatter component that provides
  * methods and interfaces to format objects to text in an

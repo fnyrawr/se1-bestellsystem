@@ -131,12 +131,6 @@ class RTE_Impl implements RTE {
 		private final DataRepositoryImpl dataRepositoryImpl = new DataRepositoryImpl();
 
 		/**
-		 * DataRepository implementations used by Runtime instance.
-		 */
-		private final InventoryManager inventoryManager = new InventoryManagerMOCK();
-
-
-		/**
 		 * Private constructor.
 		 * 
 		 * @param config Configuration to configure Runtime instance.
@@ -247,7 +241,7 @@ class RTE_Impl implements RTE {
 		 */
 		@Override
 		public InventoryManager getInventoryManager() {
-			return inventoryManager.getInventoryManager();
+			return InventoryManagerMOCK.getInstance( this );
 		}
 
 	

@@ -2,19 +2,34 @@ package system.impl;
 
 import datamodel.Order;
 import system.InventoryManager;
+import system.RTE;
 
 /**
  * Singleton component that manages Inventories in the InventoryManager.
  *
  * @author fkate
- * @since 0.1.0
- * @version 0.1.0
+ * @since 0.1.1
+ * @version 0.1.1
  *
  */
 
-public class InventoryManagerMOCK implements InventoryManager {
-    public InventoryManager getInventoryManager() {
-        return this;
+class InventoryManagerMOCK implements InventoryManager {
+    /**
+     * static singleton reference to OrderBuilderImpl instance (singleton pattern).
+     */
+    private static InventoryManagerMOCK inventoryManager_instance = null;
+
+    /**
+     * Provide access to RTE InventoryManagerMOCK singleton instance (singleton pattern).
+     *
+     * @param runtime dependency to resolve Repository dependencies.
+     * @return
+     */
+    public static InventoryManagerMOCK getInstance( RTE.Runtime runtime ) {
+        if( inventoryManager_instance == null ) {
+            inventoryManager_instance = new InventoryManagerMOCK();
+        }
+        return inventoryManager_instance;
     }
 
     /**

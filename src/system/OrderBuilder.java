@@ -1,16 +1,16 @@
 package system;
 
+import datamodel.Order;
+
 /**
  * Public interface of data repositories that store objects (entities)
  * of data model classes.
  *
  * @author fkate
- * @since 0.1.2
- * @version 0.1.2
+ * @since 0.1.1
+ * @version 0.1.1
  *
  */
-
-import datamodel.Order;
 
 public interface OrderBuilder {
     /**
@@ -23,7 +23,7 @@ public interface OrderBuilder {
     /**
      * Build orders in OrderRepository.
      *
-     * @return chainable self‐reference.
+     * @return chainable self-reference.
      */
     public OrderBuilder build();
 }
