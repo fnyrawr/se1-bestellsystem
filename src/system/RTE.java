@@ -160,6 +160,14 @@ public interface RTE {
 
 
 		/**
+		 * Return singleton instance of OrderBuilder.
+		 *
+		 * @return singleton instance of OrderBuilder
+		 */
+		OrderBuilder getOrderBuilder();
+
+
+		/**
 		 * Load data into repositories during Runtime launch,
 		 * {@code Runtime.launch( (config, rt) -> { rt.loadData(); } );}
 		 * 
