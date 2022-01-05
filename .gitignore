@@ -16,6 +16,7 @@ out
 # ignore generated directories and compiled output
 bin
 target
+output
 **/*.class
 **/*.jar
 # ignore log files
