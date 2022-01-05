@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import datamodel.*;
-import system.DataRepository.ArticleRepository;
+import system.InventoryManager;
 import system.DataRepository.CustomerRepository;
 import system.DataRepository.OrderRepository;
 import system.Repository;
@@ -37,10 +37,21 @@ class DataSourceImpl implements DataSource {
 	}
 
 	@Override
-	public long importArticleJSON(String jsonFileName, Repository<Article> collector, Integer... limit ) {
+	public long importArticleJSON( String jsonFileName, InventoryManager inventoryManager, Integer... limit ) {
 		long count = read( jsonFileName,
-				jsonNode -> createArticle( jsonNode ),
-				e -> collector.save( e ),
+				jsonNode -> {
+					Optional<Article> aopt = createArticle( jsonNode );
+					aopt.ifPresent( a -> {
+						inventoryManager.save( a );	// add article to inventoryManager 
+						JsonNode jn = jsonNode.get( "unitsInStock" );	// try to get value from JSON
+						if( jn != null ) {
+							inventoryManager.update( a.getId(), jn.asInt() );
+						}
+					});
+					return aopt;
+				},
+//				e -> collector.save( e ),
+				e -> {},	// article already collected with: inventoryManager.create( a )
 				limit
 		);
 		return count;

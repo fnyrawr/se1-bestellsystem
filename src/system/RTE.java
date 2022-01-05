@@ -167,6 +167,7 @@ public interface RTE {
 		 */
 		Runtime loadData();
 
-	}
+        InventoryManager getInventoryManager();
+    }
 
 }
