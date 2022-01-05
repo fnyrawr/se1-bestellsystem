@@ -9,6 +9,7 @@ import system.InventoryManager;
 import system.Repository;
 
 import java.util.Comparator;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -25,7 +26,7 @@ public class InventoryManagerImpl implements InventoryManager {
     /**
      * internal data structure to manage inventory (unitsInStore) for Article-id's.
      */
-    private final HashMap<String,Integer> inventory = new HashMap<String,Integer>();
+    private final Map<String,Integer> inventory = new HashMap<String,Integer>();
 
 
     private InventoryManagerImpl(Repository<Article> articleRepository) {
