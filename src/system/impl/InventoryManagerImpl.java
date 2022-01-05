@@ -309,7 +309,7 @@ public class InventoryManagerImpl implements InventoryManager {
         String inventoryValue = formatter.fmtPrice( totalValue, Currency.EUR ).toString();
         tfmt
                 .liner( "+-+-+-+-+-+" )
-                .hdr( "", "", "Invent", "ory Value:", inventoryValue )
+                .hdr( "", "", "Inventory", "Value:", inventoryValue )
         ;
         //
         return tfmt.getFormatter().getBuffer();
