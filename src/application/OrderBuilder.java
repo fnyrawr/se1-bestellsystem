@@ -1,13 +1,16 @@
 package application;
 
 import system.RTE.Runtime;
+import system.Calculator;
 import system.DataRepository.CustomerRepository;
 
 import datamodel.Article;
+import datamodel.Currency;
 import datamodel.Customer;
 import datamodel.Order;
-import system.DataRepository.ArticleRepository;
 import system.DataRepository.OrderRepository;
+import system.Formatter;
+import system.InventoryManager;
 import system.Repository;
 
 
@@ -15,9 +18,7 @@ import system.Repository;
  * Singleton component that builds orders and stores them in the
  * OrderRepository.
  * 
- * @author fkate
- * @since 0.1.0
- * @version 0.1.0
+ * @author sgra64
  *
  */
 
@@ -33,9 +34,14 @@ public class OrderBuilder {
 	 */
 	private final Repository<Customer> customerRepository;
 	//
-	private final Repository<Article> articleRepository;
+//	private final Repository<Article> articleRepository;
+	private final InventoryManager inventoryManager;
 	//
 	private final Repository<Order> orderRepository;
+	//
+	private final Calculator calculator;
+	//
+	private final Formatter formatter;
 
 
 	/**
@@ -60,22 +66,36 @@ public class OrderBuilder {
 	 */
 	private OrderBuilder( Runtime runtime ) {
 		this.customerRepository = runtime.getCustomerRepository();
-		this.articleRepository = runtime.getArticleRepository();
+//		this.articleRepository = runtime.getArticleRepository();
+		this.inventoryManager = runtime.getInventoryManager();
 		this.orderRepository = runtime.getOrderRepository();
+		this.calculator = runtime.getCalculator();
+		this.formatter = runtime.getPrinter().createFormatter();
 	}
 
 
 	/**
-	 * Save order to OrderRepository.
+	 * Save order to OrderRepository if order is fillable (all order items
+	 * can be allocated from current inventory).
 	 * 
 	 * @param order saved to OrderRepository
 	 * @return chainable self-reference
 	 */
 	public boolean accept( Order order ) {
-		// TODO: validate order
-		boolean valid = true;
-		orderRepository.save( order );
-		return valid;
+		long orderValue = calculator.calculateValue( order );
+		//
+		boolean isFillable = inventoryManager.isFillable( order );
+		if( isFillable && (
+				isFillable = inventoryManager.fill( order )
+		) ) {
+			StringBuffer fmtValue = formatter.fmtPaddedPrice( orderValue, 12, ' ', Currency.NONE );
+			System.out.println( "Order: " + order.getId() + " filled:" + fmtValue.toString() );
+			orderRepository.save( order );	// save filled order
+		} else {
+			StringBuffer fmtValue = formatter.fmtPrice( orderValue, Currency.NONE );
+			System.err.println( "Order: " + order.getId() + " is not fillable from current inventory: " + fmtValue.toString() );
+		}
+		return isFillable;
 	}
 
 
@@ -100,7 +120,8 @@ public class OrderBuilder {
 		Customer brigitte = crep.findById( 660380 ).get();
 		Customer joel = crep.findById( 582596 ).get();
 
-		Repository<Article> arep = articleRepository;
+//		ArticleRepository arep = articleRepository;
+		InventoryManager arep = inventoryManager;
 		/*
 		 * Look up articles from ArticleRepository.
 		 */
