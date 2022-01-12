@@ -5,7 +5,7 @@ import datamodel.Customer;
 import datamodel.Order;
 import system.Repository;
 
-public class DataRepositoryImpl {
+class DataRepositoryImpl {
 
     private Repository<Customer> customerRepository;
     private Repository<Article> articleRepository;
