@@ -181,8 +181,6 @@ public interface RTE {
 		 * @return chainable self reference.
 		 */
 		Runtime loadData();
-
-        InventoryManager getInventoryManager();
     }
 
 }

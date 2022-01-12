@@ -30,7 +30,7 @@ class RTE_Impl implements RTE {
 
 	/**
 	 * Create and configure a new Runtime instance before it is launched.
-	 *  
+	 *
 	 * @param config functional interface to provide configuration information.
 	 * @return instance of Configuration that can be launched.
 	 */
@@ -57,7 +57,7 @@ class RTE_Impl implements RTE {
 
 		/**
 		 * Store configuration Property as String key-value pair.
-		 * 
+		 *
 		 * @param key key to store value
 		 * @param value value stored
 		 * @return chainable self-reference
@@ -73,7 +73,7 @@ class RTE_Impl implements RTE {
 
 		/**
 		 * Retrieve value stored for key.
-		 * 
+		 *
 		 * @param key key to access value
 		 * @return value stored for key or empty
 		 */
@@ -85,7 +85,7 @@ class RTE_Impl implements RTE {
 
 		/**
 		 * Create and launch new Runtime from configuration.
-		 * 
+		 *
 		 * @param runtime functional interface with Configuration and Runtime to launch.
 		 * @return instance of Runtime.
 		 * @throws RuntimeException thrown with errors during launch
@@ -124,7 +124,7 @@ class RTE_Impl implements RTE {
 
 		/**
 		 * Printer instance used by Runtime instance.
-		 * 
+		 *
 		 * Has a dependency on Calculator.
 		 */
 		private final Printer printer;
@@ -136,7 +136,7 @@ class RTE_Impl implements RTE {
 
 		/**
 		 * InventoryManager implementation used by Runtime instance.
-		 * 
+		 *
 		 * Has a dependency on ArticleRepository.
 		 */
 		private final InventoryManager inventoryManager;
@@ -144,7 +144,7 @@ class RTE_Impl implements RTE {
 
 		/**
 		 * Private constructor.
-		 * 
+		 *
 		 * @param config Configuration to configure Runtime instance.
 		 */
 
@@ -163,7 +163,7 @@ class RTE_Impl implements RTE {
 
 		/**
 		 * Configuration getter.
-		 * 
+		 *
 		 * @return Configuration.
 		 */
 
@@ -171,14 +171,14 @@ class RTE_Impl implements RTE {
 		public Configuration getConfiguration() {
 			return config;
 		}
-		
+
 
 		/**
 		 * Shutting down Runtime instance.
-		 * 
+		 *
 		 * @param runtime functional interface invoked during shutdown.
 		 * @return Runtime Environment from which Runtime instance was launched.
-		 * 
+		 *
 		 * @throws RuntimeException thrown with errors during shutdown
 		 */
 
@@ -193,7 +193,7 @@ class RTE_Impl implements RTE {
 
 		/**
 		 * Return singleton calculator instance.
-		 * 
+		 *
 		 * @return singleton calculator instance.
 		 */
 
@@ -205,7 +205,7 @@ class RTE_Impl implements RTE {
 
 		/**
 		 * Return singleton printer instance.
-		 * 
+		 *
 		 * @return singleton printer instance.
 		 */
 
@@ -217,7 +217,7 @@ class RTE_Impl implements RTE {
 
 		/**
 		 * Return singleton instance of CustomerRepository.
-		 * 
+		 *
 		 * @return singleton instance of CustomerRepository
 		 */
 
@@ -229,10 +229,10 @@ class RTE_Impl implements RTE {
 
 		/**
 		 * Return singleton instance of ArticleRepository.
-		 * 
+		 *
 		 * REMOVED with feat.732 that fully hides ArticleRepository
 		 * inside InventoryManager.
-		 * 
+		 *
 		 * @return singleton instance of ArticleRepository
 		 */
 
@@ -244,7 +244,7 @@ class RTE_Impl implements RTE {
 
 		/**
 		 * Return singleton instance of OrderRepository.
-		 * 
+		 *
 		 * @return singleton instance of OrderRepository
 		 */
 
@@ -256,7 +256,7 @@ class RTE_Impl implements RTE {
 
 		/**
 		 * Return singleton InventoryManager instance.
-		 * 
+		 *
 		 * @return singleton InventoryManager instance.
 		 */
 
@@ -266,36 +266,46 @@ class RTE_Impl implements RTE {
 
 
 		/**
+		 * Return singleton instance of OrderBuilder.
+		 *
+		 * @return singleton instance of OrderBuilder
+		 */
+		public OrderBuilder getOrderBuilder() {
+			return OrderBuilderImpl.getInstance( this );
+		}
+
+
+		/**
 		 * Load data into repositories during Runtime launch,
 		 * Runtime.launch( (config, rt) -> { rt.loadData(); } );
-		 * 
+		 *
 		 * @return chainable self reference.
 		 */
 
 		@Override
 		public Runtime loadData() {
 			config.get( KEY_DATASOURCE )
-				.filter( ds -> ds.equals( JSON_DATASOURCE ) )
-				.ifPresent( ds -> {
-					//
-					DataSource jsonData = new DataSourceImpl();
-					//
-					config.get( KEY_DATASOURCE_CUSTOMER ).ifPresent( jsonFileName -> {
-						long count = jsonData.importCustomerJSON( jsonFileName, getCustomerRepository() );
-						System.out.println( " + loaded " + count + " obj from: " + jsonFileName );
-					});
-					//
-					config.get( KEY_DATASOURCE_ARTICLE ).ifPresent( jsonFileName -> {
+					.filter( ds -> ds.equals( JSON_DATASOURCE ) )
+					.ifPresent( ds -> {
+						//
+						DataSource jsonData = new DataSourceImpl();
+						//
+						config.get( KEY_DATASOURCE_CUSTOMER ).ifPresent( jsonFileName -> {
+							long count = jsonData.importCustomerJSON( jsonFileName, getCustomerRepository() );
+							System.out.println( " + loaded " + count + " obj from: " + jsonFileName );
+						});
+						//
+						config.get( KEY_DATASOURCE_ARTICLE ).ifPresent( jsonFileName -> {
 //						long count = jsonData.importArticleJSON( jsonFileName, getArticleRepository() );
-						long count = jsonData.importArticleJSON( jsonFileName, getInventoryManager() );
-						System.out.println( " + loaded " + count + " obj from: " + jsonFileName );
+							long count = jsonData.importArticleJSON( jsonFileName, getInventoryManager() );
+							System.out.println( " + loaded " + count + " obj from: " + jsonFileName );
+						});
+						//
+						config.get( KEY_DATASOURCE_ORDER ).ifPresent( jsonFileName -> {
+							long count = jsonData.importOrderJSON( jsonFileName, getOrderRepository() );
+							System.out.println( " + loaded " + count + " obj from: " + jsonFileName );
+						});
 					});
-					//
-					config.get( KEY_DATASOURCE_ORDER ).ifPresent( jsonFileName -> {
-						long count = jsonData.importOrderJSON( jsonFileName, getOrderRepository() );
-						System.out.println( " + loaded " + count + " obj from: " + jsonFileName );
-					});
-			});
 			return this;
 		}
 
