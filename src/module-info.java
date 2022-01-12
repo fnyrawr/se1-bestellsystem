@@ -7,7 +7,7 @@
  *
  * @author fkate
  * @since 0.1.0
- * @version 0.1.1
+ * @version 0.1.2
  */
 
 module se1.bestellsystem {
