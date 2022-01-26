@@ -7,7 +7,7 @@
 .settings
 # ignore IntelliJ project files
 out
-output
+.out
 *.iml
 .idea
 *.iws
