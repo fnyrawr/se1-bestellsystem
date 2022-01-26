@@ -7,6 +7,7 @@ import static system.RTE.Configuration.KEY_DATASOURCE_CUSTOMER;
 
 import datamodel.Currency;
 import system.InventoryManager;
+import system.OrderBuilder;
 import system.RTE;
 import system.RTE.Runtime;
 
@@ -66,7 +67,7 @@ public class Application_E56_feat732 {
 
 		System.out.println( "accepting orders: " );
 		//
-		OrderBuilder ob = OrderBuilder.getInstance( runtime );
+		OrderBuilder ob = runtime.getOrderBuilder();
 		ob.build();		// build and save filled orders to OrderRepository
 		//
 		long orderValue = runtime.getCalculator().calculateValue( runtime.getOrderRepository().findAll() );
